@@ -9,7 +9,7 @@ class Mensagem extends Model
 {
 	use SoftDeletes;
 
-	protected $table = 'chat';
+	protected $table = 'mensagens';
 	protected $guarded = [
 		'id'
 	];

@@ -12,9 +12,14 @@
         "fideloper/proxy": "^4.0",
         "jenssegers/mongodb": "^3.6",
         "laravel/framework": "^6.2",
-        "laravel/tinker": "^2.0"
+        "laravel/tinker": "^2.0",
+        "laravel/telescope": "^2.1",
+        "laravelcollective/html": "^6.0",
+        "maatwebsite/excel": "^3.1",
+        "yajra/laravel-datatables-oracle": "^9.6"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.2",
         "facade/ignition": "^1.4",
         "fzaninotto/faker": "^1.4",
         "laravel/ui": "^1.1",

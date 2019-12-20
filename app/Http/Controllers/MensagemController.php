@@ -27,13 +27,20 @@ class MensagemController extends Controller
      */
     public function getData(Request $request)
     {
+
         //Pega as ultimas mensagens de cada remetente
         $remetentes = Mensagem::with('remetente')->where('destinatario_id',Auth::id())
         ->select(DB::raw('*, max(id) as last_id'))
         ->orderBy('last_id','DESC')
         ->groupBy('remetente_id')
         ->get();
-        $ultimoRemetente = $remetentes->first()->remetente_id;
+        if(!empty($request->remetente)){
+            //quando passado o remente as mensagens que retornaram sao dele
+            $ultimoRemetente = $request->remetente;
+        }else{
+            $ultimoRemetente = $remetentes->first()->remetente_id;
+        }
+
         //Pega todas as mensagens enviadas ou recebidas do usuario logado para o ultimo remetente
         $mensagens = Mensagem::with('remetente')
         ->where(function ($query) use ($ultimoRemetente) {
@@ -45,15 +52,14 @@ class MensagemController extends Controller
         })
         ->orderBy('created_at','ASC')
         ->get();
-        //dd($mensagens);
 
-        return view('chat.index')->with('data',array('mensagens' => $mensagens, 'remetentes' => $remetentes));
-        return response()->json();
-        if(Request::wantsJson()){
-            $mensagens = Mensagem::where('destinatario_id',Auth::id())->get();
-            return response()->json($mensagens);
+        $data = array('mensagens' => $mensagens, 'remetentes' => $remetentes);
+
+
+        if($request->wantsJson()){
+            return response()->json($data);
         }
-        return view('mensagens.index');
+        return view('chat.index')->with('data',$data);
     }
     /**
      * Show the application dashboard.
@@ -91,7 +97,13 @@ class MensagemController extends Controller
             'destinatario_id' => $request->destinatario_id,
             'mensagem' => $request->mensagem,
         ]);
-        return redirect()->route('mensagens.index')->with('success','Criado com sucesso');
+        if($request->wantsJson()){
+            return response()->json(['success' => true]);
+        }
+        else{
+            return redirect()->route('mensagens.index')->with('success','Criado com sucesso');
+        }
+
 
     }
     /**

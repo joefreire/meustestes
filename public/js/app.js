@@ -2121,23 +2121,99 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 moment__WEBPACK_IMPORTED_MODULE_0___default.a.locale("pt-BR");
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["data"],
+  props: ["data", "user"],
   data: function data() {
     return {
       remetentes: this.data.remetentes,
       mensagens: this.data.mensagens,
-      ativo: this.data.remetentes[0].remetente_id,
+      userId: this.user,
       moment: moment__WEBPACK_IMPORTED_MODULE_0___default.a,
-      destinatario: this.data.remetentes[0].destinatario_id
+      mensagem: "",
+      loading: false,
+      userAtivo: this.data.remetentes[0].remetente_id
     };
   },
   mounted: function mounted() {
     console.log("Component mounted.");
     console.log(this.data);
+  },
+  methods: {
+    envia: function envia(event) {
+      var _this = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post("/mensagem/store", {
+        mensagem: this.mensagem,
+        destinatario_id: this.userAtivo
+      }).then(function (response) {
+        console.log(response);
+
+        _this.mensagens.push({
+          mensagem: _this.mensagem,
+          destinatario_id: _this.userAtivo,
+          remetente_id: _this.userId,
+          created_at: _this.moment()
+        });
+
+        _this.mensagem = '';
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    getMensagens: function getMensagens(remetente) {
+      var _this2 = this;
+
+      //console.log(remetente)
+      this.loading = true;
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/mensagem/getData?remetente=" + remetente).then(function (response) {
+        console.log(response.data.mensagens);
+        _this2.mensagens = response.data.mensagens;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+      this.loading = false;
+    }
   }
 });
 
@@ -55800,7 +55876,12 @@ var render = function() {
                 {
                   key: item.remetente_id,
                   staticClass: "chat_list",
-                  class: { active_chat: item.remetente_id == _vm.ativo }
+                  class: { active_chat: item.remetente_id == _vm.userAtivo },
+                  on: {
+                    click: function($event) {
+                      return _vm.getMensagens(item.remetente_id)
+                    }
+                  }
                 },
                 [
                   _c("div", { staticClass: "chat_people" }, [
@@ -55841,95 +55922,153 @@ var render = function() {
           _c(
             "div",
             { staticClass: "msg_history" },
-            _vm._l(_vm.mensagens, function(item) {
-              return _c("div", { key: item.id }, [
-                _c(
-                  "div",
-                  {
-                    class: [
-                      item.remetente_id != _vm.destinatario
-                        ? "incoming_msg"
-                        : "outgoing_msg"
-                    ]
-                  },
-                  [
-                    _c(
-                      "div",
-                      {
-                        directives: [
-                          {
-                            name: "show",
-                            rawName: "v-show",
-                            value: item.remetente_id != _vm.destinatario,
-                            expression: "item.remetente_id != destinatario"
-                          }
-                        ],
-                        staticClass: "incoming_msg_img"
-                      },
-                      [
-                        _c("img", {
-                          staticClass: "avatar",
-                          attrs: {
-                            src: [
-                              item.remetente.foto == null
-                                ? "https://ptetutorials.com/images/user-profile.png"
-                                : item.remetente.foto
-                            ],
-                            alt: item.remetente.name
-                          }
-                        })
+            [
+              _vm.loading == true
+                ? _c("div", { staticClass: "d-flex justify-content-center" }, [
+                    _vm._m(1)
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm._l(_vm.mensagens, function(item) {
+                return _c("div", { key: item.id }, [
+                  _c(
+                    "div",
+                    {
+                      class: [
+                        item.remetente_id != _vm.userId
+                          ? "incoming_msg"
+                          : "outgoing_msg"
                       ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        class: [
-                          item.remetente_id != _vm.destinatario
-                            ? "received_msg"
-                            : "sent_msg"
+                    },
+                    [
+                      _c(
+                        "div",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: item.remetente_id != _vm.userId,
+                              expression: "item.remetente_id != userId"
+                            }
+                          ],
+                          staticClass: "incoming_msg_img"
+                        },
+                        [
+                          item.remetente_id != _vm.userId
+                            ? _c("img", {
+                                staticClass: "avatar",
+                                attrs: {
+                                  src: [
+                                    item.remetente.foto == null
+                                      ? "https://ptetutorials.com/images/user-profile.png"
+                                      : item.remetente.foto
+                                  ],
+                                  alt: item.remetente.name
+                                }
+                              })
+                            : _vm._e()
                         ]
-                      },
-                      [
-                        _c(
-                          "div",
-                          {
-                            class: [
-                              item.remetente_id != _vm.destinatario
-                                ? "received_withd_msg"
-                                : ""
-                            ]
-                          },
-                          [
-                            _c("p", [
-                              _vm._v(
-                                "\n                                    " +
-                                  _vm._s(item.mensagem) +
-                                  "\n                                "
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("span", { staticClass: "time_date" }, [
-                              _vm._v(
-                                "\n                                    " +
-                                  _vm._s(
-                                    _vm.moment(item.created_at).format("lll")
-                                  ) +
-                                  "\n                                "
-                              )
-                            ])
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          class: [
+                            item.remetente_id != _vm.userId
+                              ? "received_msg"
+                              : "sent_msg"
                           ]
-                        )
-                      ]
-                    )
-                  ]
-                )
-              ])
-            }),
-            0
+                        },
+                        [
+                          _c(
+                            "div",
+                            {
+                              class: [
+                                item.remetente_id != _vm.userId
+                                  ? "received_withd_msg"
+                                  : ""
+                              ]
+                            },
+                            [
+                              _c("p", [
+                                _vm._v(
+                                  "\n                                        " +
+                                    _vm._s(item.mensagem) +
+                                    "\n                                    "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "time_date" }, [
+                                _vm._v(
+                                  "\n                                        " +
+                                    _vm._s(
+                                      _vm.moment(item.created_at).format("lll")
+                                    ) +
+                                    "\n                                    "
+                                )
+                              ])
+                            ]
+                          )
+                        ]
+                      )
+                    ]
+                  )
+                ])
+              })
+            ],
+            2
           ),
           _vm._v(" "),
-          _vm._m(1)
+          _c("div", { staticClass: "type_msg" }, [
+            _c("div", { staticClass: "input_msg_write" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.mensagem,
+                    expression: "mensagem"
+                  }
+                ],
+                staticClass: "write_msg",
+                attrs: { type: "text", placeholder: "Enviar nova mensagem" },
+                domProps: { value: _vm.mensagem },
+                on: {
+                  keyup: function($event) {
+                    if (
+                      !$event.type.indexOf("key") &&
+                      _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                    ) {
+                      return null
+                    }
+                    return _vm.envia($event)
+                  },
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.mensagem = $event.target.value
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "msg_send_btn",
+                  attrs: { type: "button" },
+                  on: { click: _vm.envia }
+                },
+                [
+                  _c("i", {
+                    staticClass: "fa fa-paper-plane-o",
+                    attrs: { "aria-hidden": "true" }
+                  })
+                ]
+              )
+            ])
+          ])
         ])
       ])
     ])
@@ -55950,25 +56089,11 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "type_msg" }, [
-      _c("div", { staticClass: "input_msg_write" }, [
-        _c("input", {
-          staticClass: "write_msg",
-          attrs: { type: "text", placeholder: "Type a message" }
-        }),
-        _vm._v(" "),
-        _c(
-          "button",
-          { staticClass: "msg_send_btn", attrs: { type: "button" } },
-          [
-            _c("i", {
-              staticClass: "fa fa-paper-plane-o",
-              attrs: { "aria-hidden": "true" }
-            })
-          ]
-        )
-      ])
-    ])
+    return _c(
+      "div",
+      { staticClass: "spinner-border", attrs: { role: "status" } },
+      [_c("span", { staticClass: "sr-only" }, [_vm._v("Loading...")])]
+    )
   }
 ]
 render._withStripped = true
