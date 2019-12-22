@@ -26,7 +26,6 @@ img {
     display: inline-block;
     text-align: right;
     width: 60%;
-    padding: ;
 }
 .headind_srch {
     padding: 10px 29px 10px 20px;

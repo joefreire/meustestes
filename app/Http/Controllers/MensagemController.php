@@ -59,7 +59,7 @@ class MensagemController extends Controller
         if($request->wantsJson()){
             return response()->json($data);
         }
-        return view('chat.index')->with('data',$data);
+        return view('mensagens.index')->with('data',$data);
     }
     /**
      * Show the application dashboard.

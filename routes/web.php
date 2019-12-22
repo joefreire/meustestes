@@ -15,17 +15,20 @@ Route::get('/', function () {
 	return view('welcome');
 });
 
+Route::get('/form', function () {
+	return view('form.index');
+});
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
 
-Route::prefix('mensagem')->group(function () {
-	Route::get('/', 'MensagemController@index')->name('mensagem.index');
+
+Route::prefix('mensagens')->group(function () {
+	Route::get('/', 'MensagemController@getData')->name('mensagem.index');
 	Route::get('/novo', 'MensagemController@create')->name('mensagem.create');
 	Route::get('/{id}/destroy', 'MensagemController@destroy')->name('mensagem.destroy');
-	Route::get('/{id}/editar', 'MensagemController@edit')->name('mensagem.edit');
 	Route::post('/store', 'MensagemController@store')->name('mensagem.store');
 	Route::get('/getData', 'MensagemController@getData')->name('mensagem.data');
-	Route::get('/agenda/{id}', 'MensagemController@agenda')->name('mensagem.agenda');
 });
