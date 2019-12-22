@@ -334,11 +334,12 @@ export default {
     mounted() {
         console.log("Component mounted.");
         console.log(this.data);
+        console.log(this.userAtivo)
     },
     methods: {
         envia: function(event) {
              axios
-                .post("/mensagem/store", {
+                .post(new URL(location.href)+"/store", {
                     mensagem: this.mensagem,
                     destinatario_id: this.userAtivo
                 })
@@ -355,10 +356,11 @@ export default {
             //console.log(remetente)
             this.loading = true;
             axios
-                .get("/mensagem/getData?remetente="+remetente)
+                .get(new URL(location.href)+"/getData?remetente="+remetente)
                 .then(response => {
                     console.log(response.data.mensagens);
                     this.mensagens = response.data.mensagens;
+                    this.userAtivo = response.data.mensagens[0].remetente_id;
                 })
                 .catch(function(error) {
                     console.log(error);

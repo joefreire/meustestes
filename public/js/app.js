@@ -2177,12 +2177,13 @@ moment__WEBPACK_IMPORTED_MODULE_0___default.a.locale("pt-BR");
   mounted: function mounted() {
     console.log("Component mounted.");
     console.log(this.data);
+    console.log(this.userAtivo);
   },
   methods: {
     envia: function envia(event) {
       var _this = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post("/mensagem/store", {
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post(new URL(location.href) + "/store", {
         mensagem: this.mensagem,
         destinatario_id: this.userAtivo
       }).then(function (response) {
@@ -2205,9 +2206,10 @@ moment__WEBPACK_IMPORTED_MODULE_0___default.a.locale("pt-BR");
 
       //console.log(remetente)
       this.loading = true;
-      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/mensagem/getData?remetente=" + remetente).then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get(new URL(location.href) + "/getData?remetente=" + remetente).then(function (response) {
         console.log(response.data.mensagens);
         _this2.mensagens = response.data.mensagens;
+        _this2.userAtivo = response.data.mensagens[0].remetente_id;
       })["catch"](function (error) {
         console.log(error);
       });
